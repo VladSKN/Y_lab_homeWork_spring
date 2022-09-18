@@ -2,7 +2,7 @@ package com.edu.ulab.app.facade;
 
 import com.edu.ulab.app.dto.BookDto;
 import com.edu.ulab.app.dto.UserDto;
-import com.edu.ulab.app.exception.NotFoundException;
+import com.edu.ulab.app.entity.BookEntity;
 import com.edu.ulab.app.mapper.BookMapper;
 import com.edu.ulab.app.mapper.UserMapper;
 import com.edu.ulab.app.service.BookService;
@@ -22,6 +22,7 @@ public class UserDataFacade {
     private final BookService bookService;
     private final UserMapper userMapper;
     private final BookMapper bookMapper;
+
 
     public UserDataFacade(UserService userService,
                           BookService bookService,
@@ -60,13 +61,33 @@ public class UserDataFacade {
     }
 
     public UserBookResponse updateUserWithBooks(UserBookRequest userBookRequest) {
-        return null;
+        UserDto userByName = userService.getUserByName(userBookRequest.getUserRequest().getFullName());
+
+        return UserBookResponse.builder()
+                .userId(userByName.getId())
+                .booksIdList(getListBookLong(userByName.getId()))
+                .build();
     }
 
     public UserBookResponse getUserWithBooks(Long userId) {
-        return null;
+        List<Long> list = getListBookLong(userId);
+
+        return UserBookResponse.builder()
+                .userId(userId)
+                .booksIdList(list)
+                .build();
     }
 
     public void deleteUserWithBooks(Long userId) {
+        userService.deleteUserById(userId);
+        bookService.deleteBookById(userId);
+    }
+
+    private List<Long> getListBookLong(Long userId) {
+        List<BookEntity> bookByUserId = bookService.findBookByUserId(userId);
+
+        return bookByUserId.stream()
+                .map(BookEntity::getUserId)
+                .toList();
     }
 }
