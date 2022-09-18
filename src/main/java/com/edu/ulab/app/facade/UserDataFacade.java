@@ -80,7 +80,6 @@ public class UserDataFacade {
 
     public void deleteUserWithBooks(Long userId) {
         userService.deleteUserById(userId);
-        bookService.deleteBookById(userId);
     }
 
     private List<Long> getListBookLong(Long userId) {
