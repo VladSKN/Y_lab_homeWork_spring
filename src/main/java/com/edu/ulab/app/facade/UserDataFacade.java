@@ -68,7 +68,7 @@ public class UserDataFacade {
                 .booksIdList(getListBookLong(userByName.getId()))
                 .build();
 
-        userService.updateUser(userByName);
+        userService.updateUser(userMapper.userRequestToUserDto(userBookRequest.getUserRequest()));
 
         return build;
     }

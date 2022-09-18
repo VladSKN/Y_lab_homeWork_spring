@@ -1,14 +1,9 @@
 package com.edu.ulab.app.storage;
 
 import com.edu.ulab.app.entity.BookEntity;
-import com.edu.ulab.app.entity.UserEntity;
 import org.springframework.stereotype.Component;
 
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.concurrent.ConcurrentHashMap;
+import java.util.*;
 import java.util.concurrent.locks.ReadWriteLock;
 import java.util.concurrent.locks.ReentrantReadWriteLock;
 
@@ -21,13 +16,11 @@ import java.util.concurrent.locks.ReentrantReadWriteLock;
 // так же учесть, что методы хранилища принимают другой тип данных - учесть это в абстракции
 
 @Component
-public class Storage implements BookRepository, UserRepository {
+public class BookStorage implements BookRepository {
 
     private final ReadWriteLock readWriteLock = new ReentrantReadWriteLock();
 
-    private final Map<Long, BookEntity> books = new ConcurrentHashMap<>();
-
-    private final Map<Long, UserEntity> users = new ConcurrentHashMap<>();
+    private final Map<Long, BookEntity> books = new HashMap<>();
 
     @Override
     public BookEntity insertBook(BookEntity bookEntity) {
@@ -66,26 +59,25 @@ public class Storage implements BookRepository, UserRepository {
 
     @Override
     public BookEntity updateBook(BookEntity bookEntity) {
-        Optional<BookEntity> newBook;
+        BookEntity newBook;
         try {
             readWriteLock.writeLock().lock();
 
-            newBook = Optional.ofNullable(BookEntity.builder()
+            newBook = BookEntity.builder()
                     .author(bookEntity.getAuthor())
                     .id(bookEntity.getId())
                     .pageCount(bookEntity.getPageCount())
                     .title(bookEntity.getTitle())
-                    .user(bookEntity.getUser())
                     .userId(bookEntity.getUserId())
-                    .build());
+                    .build();
 
             deleteBookById(bookEntity.getId());
-            insertBook(newBook.orElse(null));
+            insertBook(newBook);
 
         } finally {
             readWriteLock.writeLock().unlock();
         }
-        return newBook.orElse(null);
+        return newBook;
     }
 
     @Override
@@ -116,81 +108,5 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             readWriteLock.writeLock().unlock();
         }
-    }
-
-    @Override
-    public UserEntity createUser(UserEntity userEntity) {
-        try {
-            readWriteLock.writeLock().lock();
-            users.putIfAbsent(userEntity.getId(), userEntity);
-        } finally {
-            readWriteLock.writeLock().unlock();
-        }
-        return userEntity;
-    }
-
-    @Override
-    public UserEntity getUserById(long userEntityId) {
-        Optional<UserEntity> userEntity;
-        try {
-            readWriteLock.readLock().lock();
-
-            userEntity = users.values().stream()
-                    .filter(book -> book.getId().equals(userEntityId))
-                    .findFirst();
-        } finally {
-            readWriteLock.readLock().unlock();
-        }
-        return userEntity.orElse(null);
-    }
-
-    @Override
-    public void deleteUserById(long userEntityId) {
-        try {
-            readWriteLock.writeLock().lock();
-
-            users.remove(userEntityId);
-        } finally {
-            readWriteLock.writeLock().unlock();
-        }
-    }
-
-    @Override
-    public UserEntity updateUser(UserEntity userEntity) {
-        UserEntity newUser;
-        Optional<UserEntity> user;
-
-        try {
-            readWriteLock.writeLock().lock();
-            newUser = UserEntity.builder()
-                    .age(userEntity.getAge())
-                    .bookList(userEntity.getBookList())
-                    .fullName(userEntity.getFullName())
-                    .id(userEntity.getId())
-                    .title(userEntity.getTitle())
-                    .build();
-
-            users.remove(userEntity.getId());
-            user = Optional.ofNullable(createUser(newUser));
-        } finally {
-            readWriteLock.writeLock().unlock();
-        }
-        return user.orElse(null);
-    }
-
-    @Override
-    public UserEntity getUserByName(String name) {
-        Optional<UserEntity> user = Optional.empty();
-        try {
-            readWriteLock.readLock().lock();
-            for (Map.Entry<Long, UserEntity> longUserEntityEntry : users.entrySet()) {
-                if (Objects.equals(longUserEntityEntry.getValue().getFullName(), name)) {
-                    user = Optional.ofNullable(longUserEntityEntry.getValue());
-                }
-            }
-        } finally {
-            readWriteLock.readLock().unlock();
-        }
-        return user.orElse(null);
     }
 }

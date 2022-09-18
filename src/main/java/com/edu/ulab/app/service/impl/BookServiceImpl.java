@@ -38,7 +38,7 @@ public class BookServiceImpl implements BookService {
         // создать книгу
         // вернуть сохраненного книгу со всеми необходимыми полями id
         BookEntity bookEntity = bookEntityToBookDtoMapper.bookDtoToBookEntity(bookDto);
-        bookEntity.setUser(userRepository.getUserById(bookDto.getUserId()));
+        bookEntity.setUserId(userRepository.getUserById(bookDto.getUserId()).getId());
         bookEntity.setId(bookId.getAndIncrement());
         bookRepository.insertBook(bookEntity);
 
