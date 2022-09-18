@@ -63,10 +63,14 @@ public class UserDataFacade {
     public UserBookResponse updateUserWithBooks(UserBookRequest userBookRequest) {
         UserDto userByName = userService.getUserByName(userBookRequest.getUserRequest().getFullName());
 
-        return UserBookResponse.builder()
+        UserBookResponse build = UserBookResponse.builder()
                 .userId(userByName.getId())
                 .booksIdList(getListBookLong(userByName.getId()))
                 .build();
+
+        userService.updateUser(userByName);
+
+        return build;
     }
 
     public UserBookResponse getUserWithBooks(Long userId) {
