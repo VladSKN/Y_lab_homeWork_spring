@@ -106,11 +106,16 @@ public class Storage implements BookRepository, UserRepository {
 
     @Override
     public void deleteBookByUserId(long userId) {
-        books.forEach((key, value) -> {
-            if (Objects.equals(value.getUserId(), userId)) {
-                books.remove(key);
-            }
-        });
+        try {
+            readWriteLock.writeLock().lock();
+            books.forEach((key, value) -> {
+                if (Objects.equals(value.getUserId(), userId)) {
+                    books.remove(key);
+                }
+            });
+        } finally {
+            readWriteLock.writeLock().unlock();
+        }
     }
 
     @Override
