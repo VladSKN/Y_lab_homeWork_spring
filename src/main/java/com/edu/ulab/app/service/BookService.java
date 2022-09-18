@@ -16,4 +16,6 @@ public interface BookService {
     void deleteBookById(Long id);
 
     List<BookEntity> findBookByUserId(long userId);
+
+    void deleteBookByUserId(long userId);
 }

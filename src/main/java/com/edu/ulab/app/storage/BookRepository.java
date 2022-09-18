@@ -18,4 +18,5 @@ public interface BookRepository {
 
     List<BookEntity> findBookByUserId(long userId);
 
+    void deleteBookByUserId(long userId);
 }

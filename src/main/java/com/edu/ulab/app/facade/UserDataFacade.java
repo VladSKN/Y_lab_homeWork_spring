@@ -79,6 +79,7 @@ public class UserDataFacade {
     }
 
     public void deleteUserWithBooks(Long userId) {
+        bookService.deleteBookByUserId(userId);
         userService.deleteUserById(userId);
     }
 

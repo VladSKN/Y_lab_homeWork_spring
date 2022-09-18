@@ -67,4 +67,9 @@ public class BookServiceImpl implements BookService {
     public List<BookEntity> findBookByUserId(long userId) {
         return bookRepository.findBookByUserId(userId);
     }
+
+    @Override
+    public void deleteBookByUserId(long userId) {
+        bookRepository.deleteBookByUserId(userId);
+    }
 }
