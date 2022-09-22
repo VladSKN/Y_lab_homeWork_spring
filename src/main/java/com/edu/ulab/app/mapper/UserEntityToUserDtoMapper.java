@@ -8,7 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface UserEntityToUserDtoMapper {
 
-
     UserDto userEntityToUserDto(UserEntity userEntity);
 
     @Mapping(target = "bookList", expression = "java(new java.util.ArrayList())")

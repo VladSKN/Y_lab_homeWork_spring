@@ -36,6 +36,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             bookReadWriteLock.writeLock().unlock();
         }
+        log.info("insertBook from Storage successfully: {}", bookEntity);
         return bookEntity;
     }
 
@@ -50,6 +51,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             bookReadWriteLock.readLock().unlock();
         }
+        log.info("findBookById from Storage successfully: {}", bookEntity);
         return bookEntity.orElse(null);
     }
 
@@ -61,6 +63,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             bookReadWriteLock.writeLock().unlock();
         }
+        log.info("deleteBookById from Storage successfully: {}", bookEntityId);
     }
 
     @Override
@@ -83,6 +86,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             bookReadWriteLock.writeLock().unlock();
         }
+        log.info("updateBook from Storage successfully: {}", newBook);
         return newBook;
     }
 
@@ -99,6 +103,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             bookReadWriteLock.readLock().unlock();
         }
+        log.info("findBookByUserId from Storage successfully: {}", bookEntities);
         return bookEntities;
     }
 
@@ -114,6 +119,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             bookReadWriteLock.writeLock().unlock();
         }
+        log.info("deleteBookByUserId from Storage successfully: {}", userId);
     }
 
     @Override
@@ -124,6 +130,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             userReadWriteLock.writeLock().unlock();
         }
+        log.info("createUser from Storage successfully: {}", userEntity);
         return userEntity;
     }
 
@@ -139,6 +146,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             userReadWriteLock.readLock().unlock();
         }
+        log.info("getUserById from Storage successfully: {}", userEntity);
         return userEntity.orElse(null);
     }
 
@@ -151,6 +159,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             userReadWriteLock.writeLock().unlock();
         }
+        log.info("deleteUserById from Storage successfully: {}", userEntityId);
     }
 
     @Override
@@ -173,6 +182,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             userReadWriteLock.writeLock().unlock();
         }
+        log.info("updateUser from Storage successfully: {}", user);
         return user.orElse(null);
     }
 
@@ -189,6 +199,7 @@ public class Storage implements BookRepository, UserRepository {
         } finally {
             userReadWriteLock.readLock().unlock();
         }
+        log.info("getUserByName from Storage successfully: {}", user);
         return user.orElse(null);
     }
 }

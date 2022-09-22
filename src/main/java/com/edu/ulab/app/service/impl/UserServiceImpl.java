@@ -41,9 +41,12 @@ public class UserServiceImpl implements UserService {
 
         userRepository.createUser(userEntity);
 
-        userEntity.setBookList(bookRepository.findBookByUserId(userEntity.getId()));
+       // userEntity.setBookList(bookRepository.findBookByUserId(userEntity.getId()));
 
-        return toUserDtoMapper.userEntityToUserDto(userEntity);
+        UserDto userEntityToUserDto = toUserDtoMapper.userEntityToUserDto(userEntity);
+
+        log.info("createUser from UserServiceImpl successfully: {}", userEntityToUserDto);
+        return userEntityToUserDto;
     }
 
     @Override
@@ -51,23 +54,33 @@ public class UserServiceImpl implements UserService {
         UserEntity userEntity = toUserDtoMapper.userDtoToUserEntity(userDto);
         userRepository.updateUser(userEntity);
 
+        log.info("updateUser from UserServiceImpl successfully: {}", userDto);
         return userDto;
     }
 
     @Override
     public UserDto getUserById(Long id) {
         UserEntity userById = userRepository.getUserById(id);
-        return toUserDtoMapper.userEntityToUserDto(userById);
+        UserDto userDto = toUserDtoMapper.userEntityToUserDto(userById);
+
+        log.info("getUserById from UserServiceImpl successfully: {}", userDto);
+        return userDto;
     }
 
     @Override
     public void deleteUserById(Long id) {
         userRepository.deleteUserById(id);
+
+        log.info("deleteUserById from UserServiceImpl successfully: {}", id);
     }
 
     @Override
     public UserDto getUserByName(String name) {
         UserEntity userByName = userRepository.getUserByName(name);
-        return toUserDtoMapper.userEntityToUserDto(userByName);
+
+        UserDto userDto = toUserDtoMapper.userEntityToUserDto(userByName);
+
+        log.info("getUserByName from UserServiceImpl successfully: {}", userDto);
+        return userDto;
     }
 }
