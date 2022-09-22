@@ -70,21 +70,29 @@ public class UserDataFacade {
 
         userService.updateUser(userMapper.userRequestToUserDto(userBookRequest.getUserRequest()));
 
+        log.info("updateUserWithBooks: {}", build);
+
         return build;
     }
 
     public UserBookResponse getUserWithBooks(Long userId) {
         List<Long> list = getListBookLong(userId);
 
-        return UserBookResponse.builder()
+        UserBookResponse build = UserBookResponse.builder()
                 .userId(userId)
                 .booksIdList(list)
                 .build();
+
+        log.info("getUserWithBooks: {}", build);
+
+        return build;
     }
 
     public void deleteUserWithBooks(Long userId) {
         bookService.deleteBookByUserId(userId);
         userService.deleteUserById(userId);
+
+        log.info("deleteUserWithBooks");
     }
 
     private List<Long> getListBookLong(Long userId) {
