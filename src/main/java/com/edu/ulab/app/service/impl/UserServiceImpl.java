@@ -41,8 +41,6 @@ public class UserServiceImpl implements UserService {
 
         userRepository.createUser(userEntity);
 
-       // userEntity.setBookList(bookRepository.findBookByUserId(userEntity.getId()));
-
         UserDto userEntityToUserDto = toUserDtoMapper.userEntityToUserDto(userEntity);
 
         log.info("createUser from UserServiceImpl successfully: {}", userEntityToUserDto);
